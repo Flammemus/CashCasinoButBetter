@@ -78,7 +78,6 @@ def updateBalance(accountName, balance):
     db.collection("Accounts").document(accountName).update({"Balance": balance})
     return balance
 
-
 def introduction():
     global balance
     balance = getBalance(accountName)
