@@ -40,6 +40,7 @@ def login(db):
             "Password": accountPassword,
             "Balance": 100
         })
+        return accountName
 
     elif index == 1:
         while True:
@@ -55,6 +56,7 @@ def login(db):
 
         if enteredPassword == storedPassword:
             print("Login successful")
+            return accountName
         else:
             print("Incorrect password.")
 
@@ -62,8 +64,7 @@ def login(db):
         accountName = "test"
         db.collection("Accounts").document(accountName)
         print("Login successful")
-    
-    return accountName
+        return accountName
 
 accountName = login(db)
 
@@ -74,27 +75,37 @@ def getBalance(accountName):
 balance = getBalance(accountName)
 
 def updateBalance(accountName, balance):
-    if db.collection("Accounts").document(accountName) is not None:
-        db.collection("Accounts").document(accountName).update({"Balance": balance})
+    db.collection("Accounts").document(accountName).update({"Balance": balance})
+    return balance
+
 
 def introduction():
-    getBalance(accountName)
+    global balance
+    balance = getBalance(accountName)
     print(f"Your current balance: {balance}")
 
 def startGame(gameFunction, balance):
     while True:
         betAmount = input(f"Bet amount? Your balance: {balance} ('Back' to return): ")
+        
         if betAmount.lower() == "back":
             print("\nGoing back to menu\n")
             print("------------------")
             break
         
-        elif int(betAmount) > balance:
+        try:
+            betAmount = int(betAmount)
+        except ValueError:
+            print("Invalid input")
+            continue
+
+        if betAmount > balance:
             print("Bet amount cannot exceed current balance")
-        
-        elif int(betAmount) <= balance:
+        else:
             balance = gameFunction(betAmount, balance)
             updateBalance(accountName, balance)
+            return balance 
+
 
 def leaderboard():
     accounts = []
@@ -115,7 +126,7 @@ introduction()
 mainloop = True
 while mainloop:
 
-    updateBalance(accountName, balance)
+    balance = updateBalance(accountName, balance)
 
     print()
     mainloopActions = ("Display balance", "Reset balance", "Start coinflip", "Leaderboard", "Save", "Logout")
@@ -126,16 +137,16 @@ while mainloop:
         print(balance)
     
     elif index == 1:
-        balance = 100
+        balance = 1000
     
     elif index == 2:
-        startGame(coinflip, balance)
+        balance = startGame(coinflip, balance)
 
     elif index == 3:
         leaderboard()
     
     elif index == 4:
-        updateBalance(accountName, balance)
+        balance = updateBalance(accountName, balance)
     
     elif index == 5:
         login(db)
