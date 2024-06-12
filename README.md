@@ -20,5 +20,3 @@ This was a project as my IT exam in 5 hours total.
 8. Save the private key as "myKey.json" and place it in the same folder you extraced the downloaded ZIP file contents.
 9. Run the program and download all the dependant libraries using "pip install examplelibrary".
 10. After all the libraries has been installed, you should be ready to go.
-
-<h2>How to use it</h2>
