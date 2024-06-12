@@ -1,4 +1,4 @@
-# ITEksamen
+# Cash Casino but better
 
 <h2>Intro</h2>
 This was a project as my IT exam in 5 hours total.
